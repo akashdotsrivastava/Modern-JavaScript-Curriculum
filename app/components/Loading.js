@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-var styles = {
+ const styles = {
   content: {
     textAlign: 'center',
     fontSize: '35px'
@@ -9,22 +9,21 @@ var styles = {
 };
 
 class Loading extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      text: props.text
-    };
+  state = {
+    text: this.props.text
   }
+  
   componentDidMount() {
-    var stopper = this.props.text + '...';
-    this.interval = window.setInterval(function () {
-      if (this.state.text === stopper) {
+    const { text, speed } = this.props;
+
+    var stopper = `${text}...`;
+    this.interval = window.setInterval(() => {
+      if (text === stopper) {
         this.setState(() => ({ text: this.props.text }))
       } else {
         this.setState((prevState) => ({ text: prevState.text + '.' }));
       }
-    }.bind(this), this.props.speed)
+    }, speed)
   }
   componentWillUnmount() {
     window.clearInterval(this.interval);
@@ -36,16 +35,16 @@ class Loading extends React.Component {
       </p>
     )
   }
+
+  static propTypes = {
+    text: PropTypes.string.isRequired,
+    speed: PropTypes.number.isRequired,
+  };
+  
+  static defaultProps = {
+    text: 'Loading',
+    speed: 300
+  };
 }
-
-Loading.propTypes = {
-  text: PropTypes.string.isRequired,
-  speed: PropTypes.number.isRequired,
-};
-
-Loading.defaultProps = {
-  text: 'Loading',
-  speed: 300
-};
 
 export default Loading;
